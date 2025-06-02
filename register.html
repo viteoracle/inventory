@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Register Page for Point of Sale System">
+    <title>Register</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="styles.css">
+    <!-- jsQR CDN for QR Code Scanning -->
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <header class="bg-light border-bottom p-2 d-flex justify-content-between align-items-center">
+            <div>
+                <span class="text-muted">Location:</span> <span class="fw-bold">Awka Showroom</span>
+                <span class="text-muted ms-3" id="dateTime">06/02/2025 03:11 PM</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <button class="btn btn-outline-secondary btn-sm me-2">Sync All Data</button>
+                <div class="btn-group">
+                    <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="me-1">||</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#">Option 1</a></li>
+                        <li><a class="dropdown-item" href="#">Option 2</a></li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-primary p-0 d-lg-none">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link text-white" href="index.html"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="sales.html"><i class="bi bi-cart"></i> Sales</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="expenses.html"><i class="bi bi-wallet"></i> Expenses</a></li>
+                        <li class="nav-item"><a class="nav-link text-white active" href="register.html"><i class="bi bi-receipt"></i> Register</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#settings"><i class="bi bi-gear"></i> Settings</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="#logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="row g-0" style="min-height: calc(100vh - 40px);">
+            <aside class="col-md-2 bg-primary p-0 d-none d-lg-block sidebar">
+                <ul class="nav flex-column p-3">
+                    <li class="nav-item mb-2"><a class="nav-link text-white" href="index.html"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link text-white" href="sales.html"><i class="bi bi-cart"></i> Sales</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link text-white" href="expenses.html"><i class="bi bi-wallet"></i> Expenses</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link text-white active" href="register.html"><i class="bi bi-receipt"></i> Register</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link text-white" href="#settings"><i class="bi bi-gear"></i> Settings</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="#logout"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
+                </ul>
+            </aside>
+
+            <main class="col-12 col-lg-10 p-3 animate-fade-in">
+                <h2 class="mb-3">Register Products</h2>
+                <div class="d-flex justify-content-between mb-3">
+                    <button class="btn btn-warning" id="backBtn">BACK</button>
+                    <button class="btn btn-warning" id="filterBtn">FILTER</button>
+                </div>
+
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Add New Product</h5>
+                        <div class="row g-3">
+                            <div class="col-12 col-md-2">
+                                <input type="text" class="form-control" id="productName" placeholder="Product Name" aria-label="Product Name" required>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="qrCode" placeholder="QR Code/Scan" aria-label="QR Code">
+                                    <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#qrModal">
+                                        <i class="bi bi-qr-code-scan"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <input type="text" class="form-control" id="productCode" placeholder="Product Code" aria-label="Product Code" required>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <input type="number" class="form-control" id="costPrice" placeholder="Cost Price (₦)" min="0" step="0.01" aria-label="Cost Price" required>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <input type="number" class="form-control" id="sellingPrice" placeholder="Selling Price (₦)" min="0" step="0.01" aria-label="Selling Price" required>
+                            </div>
+                            <div class="col-12 col-md-2">
+                                <button class="btn btn-success w-100" onclick="addProduct()">Add Product</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- QR Code Scanner Modal -->
+                <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="qrModalLabel">Scan QR Code</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="text-center">
+                                    <video id="qrVideo" width="100%" height="auto" style="max-width: 400px;"></video>
+                                    <canvas id="qrCanvas" style="display: none;"></canvas>
+                                </div>
+                                <p id="qrStatus" class="text-center mt-2">Position the QR code in front of the camera...</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" id="scanBtn">Scan</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Action</th>
+                                <th>Product Name</th>
+                                <th>QR Code</th>
+                                <th>Product Code</th>
+                                <th>Cost Price (₦)</th>
+                                <th>Selling Price (₦)</th>
+                                <th>Date Added</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productsTable">
+                            <tr>
+                                <td><i class="bi bi-three-dots-vertical"></i></td>
+                                <td>Laptop Dell</td>
+                                <td>QR123456</td>
+                                <td>PC789</td>
+                                <td>₦150,000.00</td>
+                                <td>₦180,000.00</td>
+                                <td>Jun 01, 2025, 10:30 AM</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-three-dots-vertical"></i></td>
+                                <td>Smartphone Samsung</td>
+                                <td>QR987654</td>
+                                <td>PH456</td>
+                                <td>₦80,000.00</td>
+                                <td>₦95,000.00</td>
+                                <td>May 31, 2025, 2:15 PM</td>
+                            </tr>
+                            <tr>
+                                <td><i class="bi bi-three-dots-vertical"></i></td>
+                                <td>Headphones Sony</td>
+                                <td>QR456789</td>
+                                <td>HD123</td>
+                                <td>₦25,000.00</td>
+                                <td>₦30,000.00</td>
+                                <td>May 30, 2025, 9:45 AM</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-center mt-3">
+                    <button class="btn btn-outline-secondary btn-sm mx-1" onclick="changePage(1)">1</button>
+                    <button class="btn btn-outline-secondary btn-sm mx-1" onclick="changePage(2)">2</button>
+                    <button class="btn btn-outline-secondary btn-sm mx-1" onclick="changePage(3)">3</button>
+                    <button class="btn btn-outline-secondary btn-sm mx-1" onclick="changePage(4)">4</button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        // Update Time Dynamically
+        function updateTime() {
+            const now = new Date();
+            const options = { timeZone: 'Africa/Lagos', hour: '2-digit', minute: '2-digit', hour12: true };
+            const time = now.toLocaleTimeString('en-US', options).toUpperCase();
+            const date = now.toLocaleDateString('en-US', { timeZone: 'Africa/Lagos', year: 'numeric', month: '2-digit', day: '2-digit' });
+            document.getElementById('dateTime').textContent = `${date} ${time}`;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Add Product to Table
+        function addProduct() {
+            const productName = document.getElementById('productName').value;
+            const qrCode = document.getElementById('qrCode').value || 'N/A'; // Optional, defaults to 'N/A' if empty
+            const productCode = document.getElementById('productCode').value;
+            const costPrice = parseFloat(document.getElementById('costPrice').value) || 0;
+            const sellingPrice = parseFloat(document.getElementById('sellingPrice').value) || 0;
+
+            if (productName && productCode && costPrice > 0 && sellingPrice > 0) {
+                const now = new Date();
+                const dateAdded = now.toLocaleString('en-US', {
+                    month: 'short',
+                    day: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: true
+                }).replace(',', '');
+
+                const tbody = document.getElementById('productsTable');
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><i class="bi bi-three-dots-vertical"></i></td>
+                    <td>${productName}</td>
+                    <td>${qrCode}</td>
+                    <td>${productCode}</td>
+                    <td>₦${costPrice.toFixed(2)}</td>
+                    <td>₦${sellingPrice.toFixed(2)}</td>
+                    <td>${dateAdded}</td>
+                `;
+                tbody.insertBefore(row, tbody.firstChild); // Add new product at the top
+
+                // Clear form
+                document.getElementById('productName').value = '';
+                document.getElementById('qrCode').value = '';
+                document.getElementById('productCode').value = '';
+                document.getElementById('costPrice').value = '';
+                document.getElementById('sellingPrice').value = '';
+            } else {
+                alert('Please fill in all required fields with valid values (Cost Price and Selling Price must be greater than 0).');
+            }
+        }
+
+        // Button Actions (Placeholder)
+        document.getElementById('backBtn').addEventListener('click', () => {
+            window.history.back();
+        });
+
+        document.getElementById('filterBtn').addEventListener('click', () => {
+            alert('Filter clicked!'); // Replace with filter logic
+        });
+
+        // Pagination
+        function changePage(page) {
+            alert(`Navigating to page ${page}`); // Replace with actual page data loading
+            const tbody = document.getElementById('productsTable');
+            tbody.innerHTML = ''; // Clear current rows
+            const sampleData = [
+                ['Laptop Dell', 'QR123456', 'PC789', '₦150,000.00', '₦180,000.00', 'Jun 01, 2025, 10:30 AM'],
+                ['Smartphone Samsung', 'QR987654', 'PH456', '₦80,000.00', '₦95,000.00', 'May 31, 2025, 2:15 PM'],
+                ['Headphones Sony', 'QR456789', 'HD123', '₦25,000.00', '₦30,000.00', 'May 30, 2025, 9:45 AM']
+            ];
+            for (let i = 0; i < 3 && i < sampleData.length; i++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><i class="bi bi-three-dots-vertical"></i></td>
+                    <td>${sampleData[i][0]}</td>
+                    <td>${sampleData[i][1]}</td>
+                    <td>${sampleData[i][2]}</td>
+                    <td>${sampleData[i][3]}</td>
+                    <td>${sampleData[i][4]}</td>
+                    <td>${sampleData[i][5]}</td>
+                `;
+                tbody.appendChild(row);
+            }
+        }
+
+        // QR Code Scanning Logic
+        const video = document.getElementById('qrVideo');
+        const canvasElement = document.getElementById('qrCanvas');
+        const canvas = canvasElement.getContext('2d');
+        const qrStatus = document.getElementById('qrStatus');
+        let stream = null;
+
+        // Start video stream when modal opens
+        document.getElementById('qrModal').addEventListener('shown.bs.modal', async () => {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                video.srcObject = stream;
+                video.setAttribute('playsinline', true); // Required for iOS
+                video.play();
+                requestAnimationFrame(tick);
+                qrStatus.textContent = 'Position the QR code in front of the camera...';
+            } catch (err) {
+                qrStatus.textContent = 'Error accessing camera: ' + err.message;
+            }
+        });
+
+        // Stop video stream when modal closes
+        document.getElementById('qrModal').addEventListener('hidden.bs.modal', () => {
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+                video.srcObject = null;
+            }
+        });
+
+        // Scan QR Code on button click
+        document.getElementById('scanBtn').addEventListener('click', () => {
+            canvasElement.width = video.videoWidth;
+            canvasElement.height = video.videoHeight;
+            canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+            const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+            const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                inversionAttempts: 'dontInvert'
+            });
+
+            if (code) {
+                document.getElementById('qrCode').value = code.data;
+                qrStatus.textContent = 'QR Code scanned successfully!';
+                setTimeout(() => {
+                    bootstrap.Modal.getInstance(document.getElementById('qrModal')).hide();
+                }, 1000);
+            } else {
+                qrStatus.textContent = 'No QR Code detected. Try again.';
+            }
+        });
+
+        // Continuously check for QR code
+        function tick() {
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+                canvasElement.width = video.videoWidth;
+                canvasElement.height = video.videoHeight;
+                canvas.drawImage(video, 0, 0, canvasElement.width, canvasElement.height);
+                const imageData = canvas.getImageData(0, 0, canvasElement.width, canvasElement.height);
+                const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                    inversionAttempts: 'dontInvert'
+                });
+
+                if (code) {
+                    document.getElementById('qrCode').value = code.data;
+                    qrStatus.textContent = 'QR Code scanned successfully!';
+                    setTimeout(() => {
+                        bootstrap.Modal.getInstance(document.getElementById('qrModal')).hide();
+                    }, 1000);
+                    return;
+                }
+            }
+            if (stream) {
+                requestAnimationFrame(tick);
+            }
+        }
+
+        // Initial page load
+        changePage(1);
+    </script>
+</body>
+</html>
