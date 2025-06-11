@@ -9,16 +9,69 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Bootstrap Icons CDN -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+    <!-- jsPDF for Receipt Generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --card-bg: #f8f9fa;
+        }
+        [data-theme="dark"] {
+            --bg-color: #212529;
+            --text-color: #ffffff;
+            --card-bg: #343a40;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: all 0.3s;
+        }
+        .card {
+            background-color: var(--card-bg);
+        }
+        .chat-box {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 300px;
+            background-color: var(--card-bg);
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+    </style>
 </head>
 <body>
     <div class="container-fluid p-0">
         <header class="bg-light border-bottom p-2 d-flex justify-content-between align-items-center">
-            <div>
-                <span class="text-muted">Location:</span> <span class="fw-bold">Awka Showroom</span>
-                <span class="text-muted ms-3" id="dateTime">06/02/2025 01:52 PM</span>
+            <div class="d-flex align-items-center">
+                <div class="me-3">
+                    <label for="passportUpload" class="form-label"></label>
+                    <input type="file" class="form-control form-control-sm" id="passportUpload" accept="image/*" style="display: none;">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbrgaj2TD_tpGdrlUJgXj9lHHz687yY8X73g&s" alt="User Passport" id="passportImage" class="rounded-circle" style="cursor: pointer; width: 40px; height: 40px;" onclick="document.getElementById('passportUpload').click()">
+                </div>
+                <span class="text-muted">Location:</span> <span class="fw-bold">viteco-Rec</span>
+                <span class="text-muted ms-3" id="dateTime">06/11/2025 09:33 AM</span>
             </div>
             <div class="d-flex align-items-center">
+                <input type="text" class="form-control form-control-sm me-2" id="searchInput" placeholder="Search...">
+                <div class="btn-group me-2">
+                    <button class="btn btn-outline-secondary btn-sm" id="notificationIcon">
+                        <i class="bi bi-bell"></i><span class="badge bg-danger ms-1" id="notificationCount">0</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" id="notificationDropdown">
+                        <li><a class="dropdown-item" href="#">Notification 1</a></li>
+                        <li><a class="dropdown-item" href="#">Notification 2</a></li>
+                    </ul>
+                </div>
+                <div class="form-check form-switch me-2">
+                    <input class="form-check-input" type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                    <label class="form-check-label text-muted" for="darkModeToggle">Dark Mode</label>
+                </div>
                 <button class="btn btn-outline-secondary btn-sm me-2">Sync All Data</button>
                 <div class="btn-group">
                     <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -39,11 +92,12 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link text-white" href="#dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#sales"><i class="bi bi-cart"></i> Sales</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="#expenses"><i class="bi bi-wallet"></i> Expenses</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="index2.html"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="sales.html"><i class="bi bi-cart"></i> Sales</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="expenses.html"><i class="bi bi-wallet"></i> Expenses</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="register.html"><i class="bi bi-receipt"></i> Register</a></li>
-                        <li class="nav-item"><a class="nav-link text-white" href="setting.html"><i class="bi bi-gear"></i> Settings</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="instock.html"><i class="bi bi-gear"></i> instock</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="settings.html"><i class="bi bi-gear"></i> Settings</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="logout.html"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                     </ul>
                 </div>
@@ -57,52 +111,159 @@
                     <li class="nav-item mb-2"><a class="nav-link text-white" href="sales.html"><i class="bi bi-cart"></i> Sales</a></li>
                     <li class="nav-item mb-2"><a class="nav-link text-white" href="expenses.html"><i class="bi bi-wallet"></i> Expenses</a></li>
                     <li class="nav-item mb-2"><a class="nav-link text-white" href="register.html"><i class="bi bi-receipt"></i> Register</a></li>
-                    <li class="nav-item mb-2"><a class="nav-link text-white" href="setting.html"><i class="bi bi-gear"></i> Settings</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="instock.html"><i class="bi bi-gear"></i> instock</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link text-white" href="settings.html"><i class="bi bi-gear"></i> Settings</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="logout.html"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                 </ul>
             </aside>
 
             <main class="col-12 col-lg-10 p-3 animate-fade-in">
                 <div class="row g-3 mb-3">
-                    <div class="col-6 col-md-2">
-                        <select class="form-select" aria-label="Contact">
+                    <div class="col-6 col-md-2 col-lg-2">
+                        <select class="form-select" id="customerSelect" aria-label="Contact">
                             <option selected>Contact*</option>
                             <option value="walk-in">Walk-In Customer</option>
+                            <option value="customer1">Customer 1</option>
+                            <option value="customer2">Customer 2</option>
                         </select>
                     </div>
-                    <div class="col-6 col-md-2">
+                    <div class="col-6 col-md-2 col-lg-2">
                         <select class="form-select" aria-label="Add Contact">
                             <option selected>Add Contact</option>
                         </select>
                     </div>
-                    <div class="col-6 col-md-2">
+                    <div class="col-6 col-md-2 col-lg-2">
                         <select class="form-select" aria-label="Product">
                             <option selected>Enter Product Name or Scan Barcode</option>
                         </select>
                     </div>
-                    <div class="col-6 col-md-2">
+                    <div class="col-6 col-md-2 col-lg-2">
                         <select class="form-select" aria-label="Selling Group Price">
                             <option selected>Please Select Selling Group Pr</option>
                         </select>
                     </div>
-                    <div class="col-6 col-md-2">
+                    <div class="col-6 col-md-2 col-lg-2">
                         <select class="form-select" aria-label="Sales Agents">
                             <option selected>Please Select Sales Agent</option>
                         </select>
                     </div>
                 </div>
                 <div class="row g-3 mb-3">
-                    <div class="col-6 col-md-2">
+                    <div class="col-6 col-md-2 col-lg-2">
                         <select class="form-select" aria-label="Categories">
                             <option selected>Please Select Catego</option>
                         </select>
                     </div>
-                    <div class="col-6 col-md-2">
+                    <div class="col-6 col-md-2 col-lg-2">
                         <select class="form-select" aria-label="Brands">
                             <option selected>Please Select Brand</option>
                         </select>
                     </div>
                 </div>
+
+                <!-- Profit Card -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Profit</h5>
+                    </div>
+                    <div class="card-body">
+                        <h4 id="profitAmount">₦0.00</h4>
+                    </div>
+                </div>
+
+                <!-- Sales Chart -->
+                <div class="card mb-4">
+                    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#salesChart">
+                        <h5 class="mb-0">Sales Overview</h5>
+                    </div>
+                    <div class="card-body collapse show" id="salesChart">
+                        <div class="chart">
+                            <canvas id="salesChartCanvas" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- COGS Log -->
+                <div class="card mb-4">
+                    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#cogsLog">
+                        <h5 class="mb-0">COGS Log</h5>
+                    </div>
+                    <div class="card-body collapse show" id="cogsLog">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity Sold</th>
+                                        <th>Cost per Unit (₦)</th>
+                                        <th>Total COGS (₦)</th>
+                                        <th>Transaction</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cogsTableBody">
+                                    <!-- Dynamic rows will be added here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Receipt Settings -->
+                <div class="card mb-4">
+                    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#receiptSettings">
+                        <h5 class="mb-0">Receipt Settings</h5>
+                    </div>
+                    <div class="card-body collapse" id="receiptSettings">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label for="receiptLogo" class="form-label">Upload Logo</label>
+                                <input type="file" class="form-control" id="receiptLogo" accept="image/*">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="businessName" class="form-label">Business Name</label>
+                                <input type="text" class="form-control" id="businessName" value="Awka Showroom Store">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label for="businessAddress" class="form-label">Business Address</label>
+                                <input type="text" class="form-control" id="businessAddress" value="Awka, Anambra">
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Print Format</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="printFormat" id="thermal" value="thermal" checked>
+                                    <label class="form-check-label" for="thermal">Thermal</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="printFormat" id="a4" value="a4">
+                                    <label class="form-check-label" for="a4">A4</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary" onclick="saveReceiptSettings()">Save Settings</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tax Settings -->
+                <div class="card mb-4">
+                    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#taxSettings">
+                        <h5 class="mb-0">Tax Settings</h5>
+                    </div>
+                    <div class="card-body collapse" id="taxSettings">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6">
+                                <label for="taxRate" class="form-label">Tax Rate (%)</label>
+                                <input type="number" class="form-control" id="taxRate" value="7.5" step="0.1" min="0">
+                            </div>
+                            <div class="col-12">
+                                <button class="btn btn-primary" onclick="saveTaxSettings()">Save Tax Rate</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -119,47 +280,318 @@
                         </tbody>
                     </table>
                 </div>
+                <div class="row g-3 mb-3 align-items-end">
+                    <div class="col-6 col-md-2 col-lg-2">
+                        <select class="form-select" id="productSelect" aria-label="Product" onchange="calculatePrice()">
+                            <option selected>Select Product</option>
+                            <option value="Laptop Dell|180000|Unit">Laptop Dell (₦180,000)</option>
+                            <option value="Smartphone Samsung|95000|Unit">Smartphone Samsung (₦95,000)</option>
+                            <option value="Headphones Sony|30000|Unit">Headphones Sony (₦30,000)</option>
+                        </select>
+                    </div>
+                    <div class="col-6 col-md-2 col-lg-2">
+                        <input type="number" class="form-control" id="quantityInput" placeholder="Quantity" aria-label="Quantity" min="1" onchange="calculatePrice()">
+                    </div>
+                    <div class="col-6 col-md-2 col-lg-2">
+                        <input type="text" class="form-control" id="subtotalInput" placeholder="Subtotal" aria-label="Subtotal" readonly>
+                    </div>
+                    <div class="col-6 col-md-2 col-lg-2">
+                        <button class="btn btn-success btn-sm" onclick="addToCart()">Add to Cart</button>
+                    </div>
+                    <div class="col-6 col-md-2 col-lg-2">
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#calculatorModal">Calculator</button>
+                    </div>
+                    <div class="col-6 col-md-2 col-lg-2">
+                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#calendarModal">Calendar</button>
+                    </div>
+                </div>
                 <div class="row g-3 mb-3">
-                    <div class="col-6 col-md-2">
-                        <input type="text" class="form-control" placeholder="Product" aria-label="Product">
+                    <div class="col-12 col-md-6">
+                        <span>Items: <span id="itemCount">0</span> | Total: <span id="totalAmount">₦0.00</span> | Discount: <span id="discount">₦0.00</span> | Order Tax: <span id="orderTax">₦0.00</span></span>
                     </div>
-                    <div class="col-6 col-md-2">
-                        <input type="number" class="form-control" placeholder="Quantity" aria-label="Quantity" min="0">
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <input type="text" class="form-control" placeholder="Unit" aria-label="Unit">
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <input type="text" class="form-control" placeholder="Subtotal" aria-label="Subtotal" readonly>
-                    </div>
-                    <div class="col-6 col-md-2">
-                        <button class="btn btn-danger btn-sm" onclick="removeRow(this)">X</button>
+                    <div class="col-12 col-md-6 text-md-end">
+                        <span class="text-muted">DRAFT | QUOTATION</span>
                     </div>
                 </div>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <span>Items: <span id="itemCount">0</span> | Total: <span id="totalAmount">₦0.00</span> | Discount: <span id="discount">₦0.00</span> | Order Tax: <span id="orderTax">₦0.00</span></span>
-                    <span class="text-muted">DRAFT | QUOTATION</span>
-                </div>
-                <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group btn-group-lg flex-wrap gap-2" role="group">
-                        <button class="btn btn-danger" id="cancelBtn">CANCEL</button>
-                        <button class="btn btn-success" id="creditSaleBtn">CREDIT SALE</button>
-                        <button class="btn btn-warning" id="suspendBtn">SUSPEND</button>
-                        <button class="btn btn-info" id="multiplePayBtn">MULTIPLE PAY</button>
-                        <button class="btn btn-secondary" id="promonieBtn">PROMONIE</button>
-                        <button class="btn btn-success" id="cashBtn">CASH</button>
+                <div class="row g-3">
+                    <div class="col-12 col-md-6">
+                        <div class="btn-group btn-group-lg flex-wrap gap-2" role="group">
+                            <button class="btn btn-danger" id="cancelBtn">CANCEL</button>
+                            <button class="btn btn-success" id="creditSaleBtn">CREDIT SALE</button>
+                            <button class="btn btn-warning" id="suspendBtn">SUSPEND</button>
+                            <button class="btn btn-info" id="multiplePayBtn">MULTIPLE PAY</button>
+                            <button class="btn btn-secondary" id="promonieBtn">PROMONIE</button>
+                            <button class="btn btn-success" id="cashBtn">CASH</button>
+                        </div>
                     </div>
-                    <div>
+                    <div class="col-12 col-md-6 text-md-end mt-3 mt-md-0">
                         <span>Total Payable: <span id="payableAmount">₦0.00</span></span>
-                        <button class="btn btn-warning ms-3" id="recentTransactionsBtn">RECENT TRANSACTIONS</button>
+                        <a href="#" class="btn btn-warning ms-3" id="customerStatementBtn" data-bs-toggle="modal" data-bs-target="#customerStatementModal">CUSTOMER STATEMENT</a>
+                        <a href="sales.html" class="btn btn-warning ms-3" id="recentTransactionsBtn">RECENT TRANSACTIONS</a>
                     </div>
                 </div>
             </main>
+        </div>
+
+        <!-- Chat Box -->
+        <div class="chat-box">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h6 class="mb-0">Chat</h6>
+                <button class="btn btn-sm btn-close" onclick="toggleChat()"></button>
+            </div>
+            <div class="card-body p-2" style="max-height: 200px; overflow-y: auto;" id="chatMessages">
+                <!-- Dynamic messages will be added here -->
+            </div>
+            <div class="card-footer p-1">
+                <div class="input-group">
+                    <input type="text" class="form-control form-control-sm" id="chatInput" placeholder="Type a message...">
+                    <button class="btn btn-sm btn-primary" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calculator Modal -->
+        <div class="modal fade" id="calculatorModal" tabindex="-1" aria-labelledby="calculatorModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="calculatorModalLabel">Calculator</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="text" class="form-control mb-2" id="calculatorDisplay" readonly>
+                        <div class="row g-1">
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('7')">7</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('8')">8</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('9')">9</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('/')">/</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('4')">4</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('5')">5</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('6')">6</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('*')">x</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('1')">1</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('2')">2</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('3')">3</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('-')">-</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('0')">0</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('.')">.</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('=')">=</button></div>
+                            <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('+')">+</button></div>
+                            <div class="col-12"><button class="btn btn-danger w-100" onclick="calculator('C')">Clear</button></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Calendar Modal -->
+        <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="calendarModalLabel">Calendar</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="date" class="form-control" id="calendarDate">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="selectDate()">Select</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Statement Modal -->
+        <div class="modal fade" id="customerStatementModal" tabindex="-1" aria-labelledby="customerStatementModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="customerStatementModalLabel">Customer Statement</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="customerStatementForm">
+                            <div class="mb-3">
+                                <label for="customerName" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="customerName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="customerEmail" class="form-label">Email</label>
+                                <input type="email" class="form-control" id="customerEmail" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="customerComment" class="form-label">Comment</label>
+                                <textarea class="form-control" id="customerComment" rows="3" required></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary" id="submitStatementBtn">Submit</button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     <!-- Bootstrap JS CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="script.js"></script>
+    <script>
+        // Update Time Dynamically
+        function updateTime() {
+            const now = new Date();
+            const options = { timeZone: 'Africa/Lagos', hour: '2-digit', minute: '2-digit', hour12: true };
+            const time = now.toLocaleTimeString('en-US', options).toUpperCase();
+            const date = now.toLocaleDateString('en-US', { timeZone: 'Africa/Lagos', year: 'numeric', month: '2-digit', day: '2-digit' });
+            document.getElementById('dateTime').textContent = `${date} ${time}`;
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // Toggle Dark Mode
+        function toggleDarkMode() {
+            document.body.dataset.theme = document.getElementById('darkModeToggle').checked ? 'dark' : 'light';
+        }
+
+        // Update Passport Image
+        document.getElementById('passportUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('passportImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Notification Dropdown
+        document.getElementById('notificationIcon').addEventListener('click', function() {
+            const dropdown = new bootstrap.Dropdown(document.getElementById('notificationDropdown'));
+            dropdown.toggle();
+        });
+
+        // Calculator Logic
+        let calcDisplay = '';
+        function calculator(value) {
+            const display = document.getElementById('calculatorDisplay');
+            if (value === '=') {
+                try {
+                    calcDisplay = eval(calcDisplay).toString();
+                } catch {
+                    calcDisplay = 'Error';
+                }
+            } else if (value === 'C') {
+                calcDisplay = '';
+            } else {
+                calcDisplay += value;
+            }
+            display.value = calcDisplay;
+        }
+
+        // Select Date from Calendar
+        function selectDate() {
+            const date = document.getElementById('calendarDate').value;
+            if (date) {
+                alert(`Selected date: ${new Date(date).toLocaleDateString('en-US')}`);
+            }
+            bootstrap.Modal.getInstance(document.getElementById('calendarModal')).hide();
+        }
+
+        // Toggle Chat Box
+        let chatVisible = true;
+        function toggleChat() {
+            const chatBox = document.querySelector('.chat-box');
+            chatVisible = !chatVisible;
+            chatBox.style.display = chatVisible ? 'block' : 'none';
+        }
+
+        // Send Message
+        function sendMessage() {
+            const input = document.getElementById('chatInput').value;
+            if (input) {
+                const messages = document.getElementById('chatMessages');
+                messages.innerHTML += `<p>${input}</p>`;
+                messages.scrollTop = messages.scrollHeight;
+                document.getElementById('chatInput').value = '';
+            }
+        }
+
+        // Sales Chart Initialization
+        document.addEventListener('DOMContentLoaded', function () {
+            var salesChartCanvas = document.getElementById('salesChartCanvas').getContext('2d');
+            var salesChartData = {
+                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+                datasets: [
+                    {
+                        label: 'Digital Goods',
+                        backgroundColor: 'rgba(60,141,188,0.9)',
+                        borderColor: 'rgba(60,141,188,0.8)',
+                        pointRadius: false,
+                        pointColor: '#3b8bba',
+                        pointStrokeColor: 'rgba(60,141,188,1)',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(60,141,188,1)',
+                        data: [28, 48, 40, 19, 86, 27, 90]
+                    },
+                    {
+                        label: 'Electronics',
+                        backgroundColor: 'rgba(210, 214, 222, 1)',
+                        borderColor: 'rgba(210, 214, 222, 1)',
+                        pointRadius: false,
+                        pointColor: 'rgba(210, 214, 222, 1)',
+                        pointStrokeColor: '#c1c7d1',
+                        pointHighlightFill: '#fff',
+                        pointHighlightStroke: 'rgba(220,220,220,1)',
+                        data: [65, 59, 80, 81, 56, 55, 40]
+                    }
+                ]
+            };
+
+            var salesChartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                legend: {
+                    display: true
+                },
+                scales: {
+                    xAxes: [{
+                        gridLines: {
+                            display: false,
+                        }
+                    }],
+                    yAxes: [{
+                        gridLines: {
+                            display: false,
+                        }
+                    }]
+                }
+            };
+
+            new Chart(salesChartCanvas, {
+                type: 'line',
+                data: salesChartData,
+                options: salesChartOptions
+            });
+        });
+
+        // Customer Statement Form Submission
+        document.getElementById('submitStatementBtn').addEventListener('click', function() {
+            const name = document.getElementById('customerName').value;
+            const email = document.getElementById('customerEmail').value;
+            const comment = document.getElementById('customerComment').value;
+
+            if (name && email && comment) {
+                alert(`Thank you, ${name}! Your comment has been submitted.\nEmail: ${email}\nComment: ${comment}`);
+                bootstrap.Modal.getInstance(document.getElementById('customerStatementModal')).hide();
+                document.getElementById('customerStatementForm').reset();
+            } else {
+                alert('Please fill out all fields.');
+            }
+        });
+    </script>
 </body>
 </html>

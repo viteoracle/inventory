@@ -37,7 +37,7 @@
         <header class="bg-light border-bottom p-2 d-flex justify-content-between align-items-center">
             <div>
                 <span class="text-muted">Location:</span> <span class="fw-bold">Awka Showroom</span>
-                <span class="text-muted ms-3" id="dateTime">06/02/2025 03:23 PM</span>
+                <span class="text-muted ms-3" id="dateTime">06/04/2025 03:45 PM</span>
             </div>
             <div class="d-flex align-items-center">
                 <button class="btn btn-outline-secondary btn-sm me-2">Sync All Data</button>
@@ -60,10 +60,11 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item"><a class="nav-link text-white" href="index.html"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="index2.html"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="sales.html"><i class="bi bi-cart"></i> Sales</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="expenses.html"><i class="bi bi-wallet"></i> Expenses</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="register.html"><i class="bi bi-receipt"></i> Register</a></li>
+                        <li class="nav-item"><a class="nav-link text-white" href="instock.html"><i class="bi bi-box-arrow-right"></i> instock</a></li>
                         <li class="nav-item"><a class="nav-link text-white active" href="setting.html"><i class="bi bi-gear"></i> Settings</a></li>
                         <li class="nav-item"><a class="nav-link text-white" href="logout.html"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                     </ul>
@@ -74,10 +75,11 @@
         <div class="row g-0" style="min-height: calc(100vh - 40px);">
             <aside class="col-md-2 bg-primary p-0 d-none d-lg-block sidebar">
                 <ul class="nav flex-column p-3">
-                    <li class="nav-item mb-2"><a class="nav-link text-white" href="index.html"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link text-white" href="index2.html"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
                     <li class="nav-item mb-2"><a class="nav-link text-white" href="sales.html"><i class="bi bi-cart"></i> Sales</a></li>
                     <li class="nav-item mb-2"><a class="nav-link text-white" href="expenses.html"><i class="bi bi-wallet"></i> Expenses</a></li>
                     <li class="nav-item mb-2"><a class="nav-link text-white" href="register.html"><i class="bi bi-receipt"></i> Register</a></li>
+                    <li class="nav-item"><a class="nav-link text-white" href="instock.html"><i class="bi bi-box-arrow-right"></i> instock</a></li>
                     <li class="nav-item mb-2"><a class="nav-link text-white active" href="setting.html"><i class="bi bi-gear"></i> Settings</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="logout.html"><i class="bi bi-box-arrow-right"></i> Logout</a></li>
                 </ul>
@@ -294,7 +296,14 @@
                                 <input type="password" class="form-control" id="newUserPassword" placeholder="Password" required>
                             </div>
                             <div class="col-12">
-                                <button class="btn btn-success" onclick="addUser()">Add User</button>
+                                <button class="btn btn-success me-2" onclick="addUser()">Add User</button>
+                                <button class="btn btn-primary" onclick="generatePassword()">Generate Password</button>
+                            </div>
+                            <div class="col-12 col-md-6" id="generatedPasswordContainer" style="display: none;">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="generatedPassword" readonly>
+                                    <button class="btn btn-outline-secondary" onclick="copyPassword()">Copy</button>
+                                </div>
                             </div>
                         </div>
                         <div class="table-responsive">
@@ -429,6 +438,31 @@
         setInterval(updateTime, 1000);
         updateTime();
 
+        // Generate Password
+        function generatePassword() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*';
+            let password = '';
+            for (let i = 0; i < 8; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            document.getElementById('newUserPassword').value = password;
+            document.getElementById('generatedPassword').value = password;
+            document.getElementById('generatedPasswordContainer').style.display = 'block';
+            return password;
+        }
+
+        // Copy Password to Clipboard
+        function copyPassword() {
+            const passwordField = document.getElementById('generatedPassword');
+            passwordField.select();
+            try {
+                document.execCommand('copy');
+                alert('Password copied to clipboard!');
+            } catch (err) {
+                alert('Failed to copy password. Please copy manually.');
+            }
+        }
+
         // Button Actions
         document.getElementById('backBtn').addEventListener('click', () => {
             window.history.back();
@@ -482,9 +516,15 @@
                 `;
                 tbody.appendChild(row);
 
+                // Store user data (in production, use a backend)
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                users.push({ name, role, password });
+                localStorage.setItem('users', JSON.stringify(users));
+
                 document.getElementById('newUserName').value = '';
                 document.getElementById('newUserRole').value = '';
                 document.getElementById('newUserPassword').value = '';
+                document.getElementById('generatedPasswordContainer').style.display = 'none';
             } else {
                 alert('Please fill in all fields.');
             }
@@ -492,7 +532,12 @@
 
         function deleteUser(button) {
             if (confirm('Are you sure you want to delete this user?')) {
-                button.closest('tr').remove();
+                const row = button.closest('tr');
+                const name = row.cells[0].textContent;
+                const users = JSON.parse(localStorage.getItem('users')) || [];
+                const updatedUsers = users.filter(user => user.name !== name);
+                localStorage.setItem('users', JSON.stringify(updatedUsers));
+                row.remove();
             }
         }
 
