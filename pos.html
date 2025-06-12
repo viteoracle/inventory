@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Professional Point of Sale System Interface">
-    <title>POS System</title>
+    <title>POS System - Point of Sale</title>
     <!-- Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <!-- Bootstrap Icons CDN -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Font Awesome CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
     <!-- jsPDF for Receipt Generation -->
@@ -86,11 +87,18 @@
             background-color: var(--card-bg);
             border-color: rgba(255, 255, 255, 0.125);
         }
+        .receipt-preview {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+        }
     </style>
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
     <!-- overlayScrollbars -->
     <link rel="stylesheet" href="plugins/overlayScrollbars/css/OverlayScrollbars.min.css">
     <!-- Theme style -->
@@ -106,7 +114,7 @@
                     <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbrgaj2TD_tpGdrlUJgXj9lHHz687yY8X73g&s" alt="User Passport" id="passportImage" class="rounded-circle" style="cursor: pointer; width: 40px; height: 40px;" onclick="document.getElementById('passportUpload').click()">
                 </div>
                 <span class="text-muted">Location:</span> <span class="fw-bold">viteco-Rec</span>
-                <span class="text-muted ms-3" id="dateTime">06/11/2025 05:04 PM</span>
+                <span class="text-muted ms-3" id="dateTime">06/11/2025 09:01 PM</span>
             </div>
             <div class="d-flex align-items-center">
                 <input type="text" class="form-control form-control-sm me-2" id="searchInput" placeholder="Search...">
@@ -159,7 +167,7 @@
         <div class="row g-0" style="min-height: calc(100vh - 40px);">
             <aside class="col-md-2 bg-primary p-0 d-none d-lg-block sidebar">
                 <ul class="nav flex-column p-3">
-                    <li class="nav-item mb-2"><a class="nav-link text-white" href="#dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+                    <li class="nav-item mb-2"><a class="nav-link text-white" href="index2.html"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link text-white" href="pos.html"><i class="bi bi-cart"></i> Point of Sales</a></li>
                     <li class="nav-item mb-2"><a class="nav-link text-white" href="sales.html"><i class="bi bi-cart"></i> Sales</a></li>
                     <li class="nav-item mb-3"><a class="nav-link text-white" href="expenses.html"><i class="bi bi-wallet"></i> Expenses</a></li>
@@ -172,301 +180,98 @@
 
             <main class="col-12 col-lg-10 p-3 animate-fade-in">
                 <div class="row">
-                    <div class="col-lg-3 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-info">
-                            <div class="inner">
-                                <h3>150</h3>
-                                <p>Top Sales</p>
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">Point of Sale</h5>
                             </div>
-                            <div class="icon">
-                                <i class="ion ion-bag"></i>
-                            </div>
-                            <a href="sales.html" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-lg-3 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-success">
-                            <div class="inner">
-                                <h3>53<sup style="font-size: 20px">%</sup></h3>
-                                <p>Expired product</p>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-stats-bars"></i>
-                            </div>
-                            <a href="expired.html" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-lg-3 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-warning">
-                            <div class="inner">
-                                <h3>44</h3>
-                                <p>User Registrations</p>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-person-add"></i>
-                            </div>
-                            <a href="addstaff.html" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-lg-3 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-danger">
-                            <div class="inner">
-                                <h3>65</h3>
-                                <p>Total Sales</p>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-pie-graph"></i>
-                            </div>
-                            <a href="sales.html" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                </div>
-
-                <!-- Sales Chart -->
-                <div class="card mb-4">
-                    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#salesChart">
-                        <h5 class="mb-0">Sales Overview</h5>
-                    </div>
-                    <div class="card-body collapse show" id="salesChart">
-                        <div class="chart">
-                            <canvas id="salesChartCanvas" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Info boxes -->
-                <div class="row">
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-info"><i class="fas fa-cash-register"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">POS</span>
-                                <span class="info-box-number">10<small>%</small></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-danger"><i class="fas fa-exchange-alt"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Transfer</span>
-                                <span class="info-box-number">41,410</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-success"><i class="fas fa-shopping-cart"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Sales</span>
-                                <span class="info-box-number">760</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-warning"><i class="fas fa-money-bill-wave"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">cash</span>
-                                <span class="info-box-number">2,000</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-primary"><i class="fas fa-chart-line"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Revenue</span>
-                                <span class="info-box-number">1,200</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-secondary"><i class="fas fa-percent"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Discount </span>
-                                <span class="info-box-number">150</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-info"><i class="fas fa-box"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Inventory</span>
-                                <span class="info-box-number">500</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-6 col-md-3">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-dark"><i class="fas fa-money-bill-wave"></i></span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Profit</span>
-                                <span class="info-box-number">450</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- COGS Log -->
-                <div class="card mb-4">
-                    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#cogsLog">
-                        <h5 class="mb-0">COGS Log</h5>
-                    </div>
-                    <div class="card-body collapse show" id="cogsLog">
-                        <div class="table-responsive">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Product</th>
-                                        <th>Quantity Sold</th>
-                                        <th>Cost per Unit (₦)</th>
-                                        <th>Total COGS (₦)</th>
-                                        <th>Transaction</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="cogsTableBody">
-                                    <!-- Dynamic rows will be added here -->
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Receipt Settings -->
-                <div class="card mb-4">
-                    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#receiptSettings">
-                        <h5 class="mb-0">Receipt Settings</h5>
-                    </div>
-                    <div class="card-body collapse" id="receiptSettings">
-                        <div class="row g-3">
-                            <div class="col-12 col-md-6">
-                                <label for="receiptLogo" class="form-label">Upload Logo</label>
-                                <input type="file" class="form-control" id="receiptLogo" accept="image/*">
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label for="businessName" class="form-label">Business Name</label>
-                                <input type="text" class="form-control" id="businessName" value="Awka Showroom Store">
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label for="businessAddress" class="form-label">Business Address</label>
-                                <input type="text" class="form-control" id="businessAddress" value="Awka, Anambra">
-                            </div>
-                            <div class="col-12 col-md-6">
-                                <label class="form-label">Print Format</label>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="printFormat" id="thermal" value="thermal" checked>
-                                    <label class="form-check-label" for="thermal">Thermal</label>
+                            <div class="card-body">
+                                <div class="row g-3 mb-3">
+                                    <div class="col-12 col-md-4">
+                                        <select class="form-select" id="searchFilter" onchange="filterProducts()">
+                                            <option value="">Search by: Name, ID, or Category</option>
+                                            <option value="name">By Name</option>
+                                            <option value="id">By ID</option>
+                                            <option value="category">By Category</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-12 col-md-8">
+                                        <input type="text" class="form-control" id="searchInputProduct" placeholder="Enter search term..." oninput="filterProducts()">
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <select class="form-select" id="productSelect" aria-label="Product" onchange="calculatePrice()">
+                                            <option selected>Select Product</option>
+                                            <option value="Laptop Dell|180000|Unit|LD001|Electronics">Laptop Dell (₦180,000)</option>
+                                            <option value="Smartphone Samsung|95000|Unit|SS001|Electronics">Smartphone Samsung (₦95,000)</option>
+                                            <option value="Headphones Sony|30000|Unit|HS001|Audio">Headphones Sony (₦30,000)</option>
+                                            <option value="Mouse Logitech|5000|Unit|ML001|Accessories">Mouse Logitech (₦5,000)</option>
+                                            <option value="Keyboard Dell|15000|Unit|KD001|Accessories">Keyboard Dell (₦15,000)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6 col-md-2">
+                                        <input type="number" class="form-control" id="quantityInput" placeholder="Quantity" aria-label="Quantity" min="1" onchange="calculatePrice()">
+                                    </div>
+                                    <div class="col-6 col-md-2">
+                                        <input type="text" class="form-control" id="subtotalInput" placeholder="Subtotal" aria-label="Subtotal" readonly>
+                                    </div>
+                                    <div class="col-6 col-md-2">
+                                        <button class="btn btn-success btn-sm" onclick="addToCart()">Add to Cart</button>
+                                    </div>
+                                    <div class="col-6 col-md-3">
+                                        <button class="btn btn-primary btn-sm" onclick="generateReceipt()">Generate Receipt</button>
+                                    </div>
                                 </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="printFormat" id="a4" value="a4">
-                                    <label class="form-check-label" for="a4">A4</label>
+
+                                <div class="table-responsive">
+                                    <table class="table table-striped" id="cartTable">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Quantity</th>
+                                                <th>Unit Price (₦)</th>
+                                                <th>Subtotal (₦)</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="cartBody">
+                                            <!-- Dynamic rows will be added here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="row g-3 mb-3">
+                                    <div class="col-12 col-md-6">
+                                        <span>Items: <span id="itemCount">0</span> | Total: <span id="totalAmount">₦0.00</span> | Discount: <span id="discount">₦0.00</span> | Tax: <span id="taxAmount">₦0.00</span></span>
+                                    </div>
+                                    <div class="col-12 col-md-6 text-md-end">
+                                        <span class="text-muted">DRAFT | TRANSACTION</span>
+                                    </div>
+                                </div>
+
+                                <div class="row g-3">
+                                    <div class="col-12 col-md-6">
+                                        <div class="btn-group btn-group-lg flex-wrap gap-2" role="group">
+                                            <button class="btn btn-danger" id="cancelBtn" onclick="clearCart()">CANCEL</button>
+                                            <button class="btn btn-success" id="cashBtn" onclick="processPayment('Cash')">CASH</button>
+                                            <button class="btn btn-info" id="creditSaleBtn" onclick="processPayment('Credit')">CREDIT SALE</button>
+                                            <button class="btn btn-warning" id="multiplePayBtn" onclick="processPayment('Multiple')">MULTIPLE PAY</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6 text-md-end mt-3 mt-md-0">
+                                        <span>Total Payable: <span id="payableAmount">₦0.00</span></span>
+                                        <button class="btn btn-secondary ms-3" id="clearBtn" onclick="clearCart()">Clear Cart</button>
+                                    </div>
+                                </div>
+
+                                <div class="receipt-preview" id="receiptPreview">
+                                    <!-- Receipt preview will be displayed here -->
                                 </div>
                             </div>
-                            <div class="col-12">
-                                <button class="btn btn-primary" onclick="saveReceiptSettings()">Save Settings</button>
-                            </div>
                         </div>
-                    </div>
-                </div>
-
-                <!-- Tax Settings -->
-                <div class="card mb-4">
-                    <div class="card-header" data-bs-toggle="collapse" data-bs-target="#taxSettings">
-                        <h5 class="mb-0">Tax Settings</h5>
-                    </div>
-                    <div class="card-body collapse" id="taxSettings">
-                        <div class="row g-3">
-                            <div class="col-12 col-md-6">
-                                <label for="taxRate" class="form-label">Tax Rate (%)</label>
-                                <input type="number" class="form-control" id="taxRate" value="7.5" step="0.1" min="0">
-                            </div>
-                            <div class="col-12">
-                                <button class="btn btn-primary" onclick="saveTaxSettings()">Save Tax Rate</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                   <!-- <div class="table-responsive">
-                    <table class="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Product</th>
-                                <th>Quantity</th>
-                                <th>Unit</th>
-                                <th>Subtotal</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody id="productList">
-                         Dynamic rows will be added here 
-                        </tbody>
-                    </table>
-                </div>
-                <div class="row g-3 mb-3 align-items-end">
-                    <div class="col-6 col-md-2 col-lg-2">
-                        <select class="form-select" id="productSelect" aria-label="Product" onchange="calculatePrice()">
-                            <option selected>Select Product</option>
-                            <option value="Laptop Dell|180000|Unit">Laptop Dell (₦180,000)</option>
-                            <option value="Smartphone Samsung|95000|Unit">Smartphone Samsung (₦95,000)</option>
-                            <option value="Headphones Sony|30000|Unit">Headphones Sony (₦30,000)</option>
-                        </select>
-                    </div>
-                    <div class="col-6 col-md-2 col-lg-2">
-                        <input type="number" class="form-control" id="quantityInput" placeholder="Quantity" aria-label="Quantity" min="1" onchange="calculatePrice()">
-                    </div>
-                    <div class="col-6 col-md-2 col-lg-2">
-                        <input type="text" class="form-control" id="subtotalInput" placeholder="Subtotal" aria-label="Subtotal" readonly>
-                    </div>
-                    <div class="col-6 col-md-2 col-lg-2">
-                        <button class="btn btn-success btn-sm" onclick="addToCart()">Add to Cart</button>
-                    </div>
-                    <div class="col-6 col-md-2 col-lg-2">
-                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#calculatorModal">Calculator</button>
-                    </div>
-                    <div class="col-6 col-md-2 col-lg-2">
-                        <button class="btn btn-info btn-sm" data-bs-toggle="modal" data-bs-target="#calendarModal">Calendar</button>
-                    </div>
-                </div>
-                <div class="row g-3 mb-3">
-                    <div class="col-12 col-md-6">
-                        <span>Items: <span id="itemCount">0</span> | Total: <span id="totalAmount">₦0.00</span> | Discount: <span id="discount">₦0.00</span> | Order Tax: <span id="orderTax">₦0.00</span></span>
-                    </div>
-                    <div class="col-12 col-md-6 text-md-end">
-                        <span class="text-muted">DRAFT | QUOTATION</span>
-                    </div>
-                </div>
-                <div class="row g-3">
-                    <div class="col-12 col-md-6">
-                        <div class="btn-group btn-group-lg flex-wrap gap-2" role="group">
-                            <button class="btn btn-danger" id="cancelBtn">CANCEL</button>
-                            <button class="btn btn-success" id="creditSaleBtn">CREDIT SALE</button>
-                            <button class="btn btn-warning" id="suspendBtn">SUSPEND</button>
-                            <button class="btn btn-info" id="multiplePayBtn">MULTIPLE PAY</button>
-                            <button class="btn btn-secondary" id="promonieBtn">PROMONIE</button>
-                            <button class="btn btn-success" id="cashBtn">CASH</button>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 text-md-end mt-3 mt-md-0">
-                        <span>Total Payable: <span id="payableAmount">₦0.00</span></span>
-                        <a href="#" class="btn btn-warning ms-3" id="customerStatementBtn" data-bs-toggle="modal" data-bs-target="#customerStatementModal">CUSTOMER STATEMENT</a>
-                        <a href="sales.html" class="btn btn-warning ms-3" id="recentTransactionsBtn">RECENT TRANSACTIONS</a>
                     </div>
                 </div>
             </main>
-        </div>-->
+        </div>
 
         <!-- Chat Box -->
         <div class="chat-box">
@@ -494,7 +299,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <input type="text" class="form-control mb-2" id="calculatorDisplay" readonly>
+                        <input type="text" class="form-control mb-2" id="calculatorDisplay" value="" readonly>
                         <div class="row g-1">
                             <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('7')">7</button></div>
                             <div class="col-3"><button class="btn btn-secondary w-100" onclick="calculator('8')">8</button></div>
@@ -615,23 +420,26 @@
             const display = document.getElementById('calculatorDisplay');
             if (value === '=') {
                 try {
-                    calcDisplay = eval(calcDisplay).toString();
-                } catch {
-                    calcDisplay = 'Error';
+                    calcDisplay = eval(calcDisplay) || 0;
+                    display.value = calcDisplay;
+                } catch (e) {
+                    display.value = 'Error';
+                    calcDisplay = '';
                 }
             } else if (value === 'C') {
                 calcDisplay = '';
+                display.value = '';
             } else {
                 calcDisplay += value;
+                display.value = calcDisplay;
             }
-            display.value = calcDisplay;
         }
 
         // Select Date from Calendar
         function selectDate() {
             const date = document.getElementById('calendarDate').value;
             if (date) {
-                alert(`Selected date: ${new Date(date).toLocaleDateString('en-US')}`);
+                document.getElementById('dateTime').textContent = new Date(date).toLocaleDateString('en-US', { timeZone: 'Africa/Lagos', year: 'numeric', month: '2-digit', day: '2-digit' }) + ' ' + document.getElementById('dateTime').textContent.split(' ')[1];
             }
             bootstrap.Modal.getInstance(document.getElementById('calendarModal')).hide();
         }
@@ -655,63 +463,160 @@
             }
         }
 
-        // Sales Chart Initialization
-        document.addEventListener('DOMContentLoaded', function () {
-            var salesChartCanvas = document.getElementById('salesChartCanvas').getContext('2d');
-            var salesChartData = {
-                labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [
-                    {
-                        label: 'Digital Goods',
-                        backgroundColor: 'rgba(60,141,188,0.9)',
-                        borderColor: 'rgba(60,141,188,0.8)',
-                        pointRadius: false,
-                        pointColor: '#3b8bba',
-                        pointStrokeColor: 'rgba(60,141,188,1)',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(60,141,188,1)',
-                        data: [28, 48, 40, 19, 86, 27, 90]
-                    },
-                    {
-                        label: 'Electronics',
-                        backgroundColor: 'rgba(210, 214, 222, 1)',
-                        borderColor: 'rgba(210, 214, 222, 1)',
-                        pointRadius: false,
-                        pointColor: 'rgba(210, 214, 222, 1)',
-                        pointStrokeColor: '#c1c7d1',
-                        pointHighlightFill: '#fff',
-                        pointHighlightStroke: 'rgba(220,220,220,1)',
-                        data: [65, 59, 80, 81, 56, 55, 40]
-                    }
-                ]
-            };
+        // POS Functionality
+        let cart = [];
 
-            var salesChartOptions = {
-                maintainAspectRatio: false,
-                responsive: true,
-                legend: {
-                    display: true
-                },
-                scales: {
-                    xAxes: [{
-                        gridLines: {
-                            display: false,
-                        }
-                    }],
-                    yAxes: [{
-                        gridLines: {
-                            display: false,
-                        }
-                    }]
-                }
-            };
+        function calculatePrice() {
+            const productSelect = document.getElementById('productSelect');
+            const quantityInput = document.getElementById('quantityInput');
+            const subtotalInput = document.getElementById('subtotalInput');
 
-            new Chart(salesChartCanvas, {
-                type: 'line',
-                data: salesChartData,
-                options: salesChartOptions
+            if (productSelect.value && quantityInput.value) {
+                const [product, price] = productSelect.value.split('|');
+                const subtotal = parseFloat(price) * parseInt(quantityInput.value);
+                subtotalInput.value = `₦${subtotal.toFixed(2)}`;
+            } else {
+                subtotalInput.value = '';
+            }
+        }
+
+        function addToCart() {
+            const productSelect = document.getElementById('productSelect');
+            const quantityInput = document.getElementById('quantityInput');
+            const subtotalInput = document.getElementById('subtotalInput');
+
+            if (productSelect.value && quantityInput.value && subtotalInput.value) {
+                const [product, price, unit, id, category] = productSelect.value.split('|');
+                const quantity = parseInt(quantityInput.value);
+                const subtotal = parseFloat(subtotalInput.value.replace('₦', ''));
+
+                cart.push({ product, price: parseFloat(price), unit, quantity, subtotal, id, category });
+                updateCart();
+                clearInputs();
+            } else {
+                alert('Please select a product and enter a quantity.');
+            }
+        }
+
+        function updateCart() {
+            const cartBody = document.getElementById('cartBody');
+            const itemCount = document.getElementById('itemCount');
+            const totalAmount = document.getElementById('totalAmount');
+            const taxAmount = document.getElementById('taxAmount');
+            const payableAmount = document.getElementById('payableAmount');
+
+            cartBody.innerHTML = '';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.product}</td>
+                    <td>${item.quantity}</td>
+                    <td>₦${item.price.toFixed(2)}</td>
+                    <td>₦${item.subtotal.toFixed(2)}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="removeItem(${index})">Remove</button></td>
+                `;
+                cartBody.appendChild(row);
+                total += item.subtotal;
             });
-        });
+
+            const taxRate = 7.5; // Default tax rate in percentage
+            const tax = (total * taxRate) / 100;
+            const payable = total + tax;
+
+            itemCount.textContent = cart.length;
+            totalAmount.textContent = `₦${total.toFixed(2)}`;
+            taxAmount.textContent = `₦${tax.toFixed(2)}`;
+            payableAmount.textContent = `₦${payable.toFixed(2)}`;
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function clearInputs() {
+            document.getElementById('productSelect').value = 'Select Product';
+            document.getElementById('quantityInput').value = '';
+            document.getElementById('subtotalInput').value = '';
+        }
+
+        function clearCart() {
+            cart = [];
+            updateCart();
+            document.getElementById('receiptPreview').innerHTML = '';
+        }
+
+        function processPayment(method) {
+            if (cart.length === 0) {
+                alert('Cart is empty. Please add items before processing payment.');
+                return;
+            }
+            alert(`Payment processed via ${method}. Total: ₦${document.getElementById('payableAmount').textContent}`);
+        }
+
+        function generateReceipt() {
+            if (cart.length === 0) {
+                alert('Cart is empty. Please add items before generating a receipt.');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            let y = 10;
+
+            // Header
+            doc.setFontSize(16);
+            doc.text('Awka Showroom Store', 105, y, { align: 'center' });
+            y += 10;
+            doc.setFontSize(12);
+            doc.text('Awka, Anambra', 105, y, { align: 'center' });
+            y += 10;
+            doc.text(`Date: ${document.getElementById('dateTime').textContent}`, 105, y, { align: 'center' });
+            y += 10;
+
+            // Table of items
+            doc.autoTable({
+                startY: y,
+                head: [['Product', 'Quantity', 'Unit Price (₦)', 'Subtotal (₦)']],
+                body: cart.map(item => [item.product, item.quantity, `₦${item.price.toFixed(2)}`, `₦${item.subtotal.toFixed(2)}`]),
+                theme: 'striped',
+                margin: { horizontal: 10 },
+                styles: { halign: 'right' },
+                headStyles: { fillColor: [22, 160, 133] }
+            });
+            y = doc.autoTable.previous.finalY + 10;
+
+            // Totals
+            const total = parseFloat(document.getElementById('totalAmount').textContent.replace('₦', ''));
+            const tax = parseFloat(document.getElementById('taxAmount').textContent.replace('₦', ''));
+            const payable = parseFloat(document.getElementById('payableAmount').textContent.replace('₦', ''));
+            doc.text(`Total: ₦${total.toFixed(2)}`, 140, y);
+            y += 5;
+            doc.text(`Tax (7.5%): ₦${tax.toFixed(2)}`, 140, y);
+            y += 5;
+            doc.text(`Total Payable: ₦${payable.toFixed(2)}`, 140, y);
+            y += 10;
+
+            // Generate and download PDF
+            doc.save('receipt.pdf');
+
+            // Update preview with text representation
+            const receiptPreview = document.getElementById('receiptPreview');
+            receiptPreview.innerHTML = `
+                <h6>Receipt Preview</h6>
+                <p><strong>Store:</strong> Awka Showroom Store</p>
+                <p><strong>Address:</strong> Awka, Anambra</p>
+                <p><strong>Date:</strong> ${document.getElementById('dateTime').textContent}</p>
+                <ul>
+                    ${cart.map(item => `<li>${item.product} - Qty: ${item.quantity} - ₦${item.subtotal.toFixed(2)}</li>`).join('')}
+                </ul>
+                <p><strong>Total:</strong> ₦${total.toFixed(2)}</p>
+                <p><strong>Tax (7.5%):</strong> ₦${tax.toFixed(2)}</p>
+                <p><strong>Total Payable:</strong> ₦${payable.toFixed(2)}</p>
+            `;
+        }
 
         // Customer Statement Form Submission
         document.getElementById('submitStatementBtn').addEventListener('click', function() {
@@ -727,6 +632,26 @@
                 alert('Please fill out all fields.');
             }
         });
+
+        // Product Search and Filter
+        function filterProducts() {
+            const searchFilter = document.getElementById('searchFilter').value;
+            const searchInput = document.getElementById('searchInputProduct').value.toLowerCase();
+            const productSelect = document.getElementById('productSelect');
+            const options = productSelect.options;
+
+            for (let i = 1; i < options.length; i++) {
+                const [product, price, unit, id, category] = options[i].value.split('|');
+                let match = false;
+
+                if (searchFilter === 'name' && product.toLowerCase().includes(searchInput)) match = true;
+                else if (searchFilter === 'id' && id.toLowerCase().includes(searchInput)) match = true;
+                else if (searchFilter === 'category' && category.toLowerCase().includes(searchInput)) match = true;
+                else if (searchFilter === '' && (product.toLowerCase().includes(searchInput) || id.toLowerCase().includes(searchInput) || category.toLowerCase().includes(searchInput))) match = true;
+
+                options[i].style.display = match ? '' : 'none';
+            }
+        }
     </script>
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
